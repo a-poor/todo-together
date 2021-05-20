@@ -1,6 +1,23 @@
-# todo-together
+# ToDo-Together
 
 _created by Austin Poor_
+
+
+## Endpoints
+
+| Endpoint | Method | Description |
+|-|-|-|
+|`/`| `GET` | Check the status of the API & get version |
+|`/auth`| `POST` | Login with `user/pass` and get JWT |
+|`/users`| `GET` | Get a list of users |
+|`/users/new`| `POST` | Create a new user |
+|`/users/{userid}`| `GET` | Get info on a specific user |
+|`/users/{userid}`| `PUT` | Update user's info |
+|`/lists`| `GET` | Get a list of lists. |
+|`/lists/new`| `POST` | Create a new list |
+|`/lists/{listid}`| `GET` | Get info on a list. |
+|`/lists/{listid}`| `PUT` | Update list info. |
+|`/lists/{listid}`| `DELETE` | Delete a list. |
 
 
 
