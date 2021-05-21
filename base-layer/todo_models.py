@@ -28,7 +28,6 @@ class User(BaseModel):
 
 
 class ListItem(BaseModel):
-    index: int
     text: str
     created_by: str # user-id
     created_at: datetime

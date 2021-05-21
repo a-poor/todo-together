@@ -30,7 +30,7 @@ Resources:
     Type: AWS::Serverless::SimpleTable
     Properties:
       PrimaryKey:
-        Name: UserID
+        Name: user_id
         Type: String
       TableName: TodoTogetherUsers
       Tags:
@@ -41,7 +41,7 @@ Resources:
     Type: AWS::Serverless::SimpleTable
     Properties:
       PrimaryKey:
-        Name: ListID
+        Name: list_id
         Type: String
       TableName: TodoTogetherLists
       Tags:

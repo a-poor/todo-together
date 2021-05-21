@@ -11,13 +11,16 @@ _created by Austin Poor_
 |`/auth`| `POST` | Login with `user/pass` and get JWT | 🚧 | ✅ | ❌ |
 |`/users`| `GET` | Get a list of users | 🚧 | ✅ | ❌ |
 |`/users/new`| `POST` | Create a new user | 🚧 | ✅ | ✅ |
-|`/users/{userid}`| `GET` | Get info on a specific user | 🚧 | ✅ | ❌ |
-|`/users/{userid}`| `PUT` | Update user's info | 🚧 | ✅ | ✅ |
+|`/users/{user_id}`| `GET` | Get info on a specific user | 🚧 | ✅ | ❌ |
+|`/users/{user_id}`| `PUT` | Update user's info | 🚧 | ✅ | ✅ |
 |`/lists`| `GET` | Get a list of lists. | 🚧 | ✅ | ❌ |
 |`/lists/new`| `POST` | Create a new list | 🚧 | ✅ | ✅ |
-|`/lists/{listid}`| `GET` | Get info on a list. | 🚧 | ✅ | ❌ |
-|`/lists/{listid}`| `PUT` | Update list info. | 🚧 | ✅ | ✅ |
-|`/lists/{listid}`| `DELETE` | Delete a list. | 🚧 | ✅ | ✅ |
+|`/lists/{list_id}`| `GET` | Get info on a list. | 🚧 | ✅ | ❌ |
+|`/lists/{list_id}`| `PUT` | Update list info. | 🚧 | ✅ | ✅ |
+|`/lists/{list_id}`| `DELETE` | Delete a list. | 🚧 | ✅ | ✅ |
+|`/friends/{user_id}`| `DELETE` | Delete a friend. | 🚧 | ✅ | ✅ |
+|`/friends/request/{user_id}`| `PUT` | Send a friend request. | 🚧 | ✅ | ✅ |
+|`/friends/request/{user_id}`| `DELETE` | Delete a friend request. | 🚧 | ✅ | ✅ |
 
 
 
