@@ -5,9 +5,9 @@ _created by Austin Poor_
 
 ## Endpoints
 
-| Endpoint | Method | Description | Status | DB Read | DB Write |
+| Endpoint | Method | Description | Status | DB Read Access | DB Write Access |
 |-|-|-|-|-|-|
-|`/`| `GET` | Check the status of the API & get version | ✅ | ❌ | ❌ |
+|`/`| `GET` | Check API status & version | ✅ | ❌ | ❌ |
 |`/auth`| `POST` | Login with `user/pass` and get JWT | 🚧 | ✅ | ❌ |
 |`/users`| `GET` | Get a list of users | 🚧 | ✅ | ❌ |
 |`/users/new`| `POST` | Create a new user | 🚧 | ✅ | ✅ |
