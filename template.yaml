@@ -2,16 +2,16 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Globals:
   Function:
-    Timeout: 3
+    Timeout: 15
     PackageType: Image
     Environment:
       Variables:
         API_VERSION: 1.0.0
+        JWT_ALGORITHM: HS256
         USER_TABLE: TodoTogetherUsers
         LIST_TABLE: TodoTogetherLists
         JWT_SECRET_NAME: TodoTogetherJwtSecret
         TOKEN_EXPIRY_MINS: 60
-
     Tags:
     - Key: project
       Value: todo-together
@@ -60,7 +60,7 @@ Resources:
             RestApiId: !Ref TodoAPI
     Metadata:
       Dockerfile: Dockerfile
-      DockerContext: ./lambda-functions/index/
+      DockerContext: ./lambda-functions/users/index/
       DockerTag: python3.8-v1
 
   AuthFunction:
