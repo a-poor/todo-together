@@ -8,9 +8,13 @@ import jwt
 import boto3
 import bcrypt
 
-import pydantic
-from data_models import User, TodoList, ListItem
-
+from models import (
+    BaseModel, 
+    User, 
+    TodoList, 
+    ListItem, 
+    TokenIs
+)
 
 
 API_VERSION = os.environ["API_VERSION"]
@@ -22,6 +26,8 @@ JWT_SECRET_NAME = os.environ["JWT_SECRET_NAME"]
 TOKEN_EXPIRY_MINS = os.environ["TOKEN_EXPIRY_MINS"]
 
 
+
+########## Lower Level Operations ##############
 
 def uuid() -> str: 
     return str(_uuid.uuid4())
@@ -52,6 +58,24 @@ def create_token(user_info) -> str:
         algorithm=JWT_ALGORITHM
     ).decode()
 
+def check_token(token: str, verify=True):
+    try:
+        data = jwt.decode(token.encode(),algorithms=JWT_ALGORITHM,verify=verify)
+    except jwt.exceptions.ExpiredSignatureError:
+        # Still try to get the user's token info
+        return check_token(token,False)[0], TokenIs.EXPIRED
+    except jwt.exceptions.ImmatureSignatureError:
+        # Still try to get the user's token info
+        return check_token(token,False)[0], TokenIs.TOO_EARLY
+    except jwt.exceptions.DecodeError:
+        return None, TokenIs.MALFORMED
+    except jwt.exceptions.PyJWTError:
+        return None, TokenIs.UNKNOWN_ERR
+    except Exception as e:
+        print(f"Unknown error checking JWT: {e}")
+        return None, TokenIs.UNKNOWN_ERR
+    return data, TokenIs.GOOD
+
 def get_user_table() -> 'DynamoDB.Table':
     return boto3.client("dynamodb").Table(USER_TABLE_NAME)
 
@@ -74,7 +98,7 @@ def user_exists(user_id: str) -> bool:
 def list_exists(list_id: str) -> bool:
     return get_list(list_id) is not None
 
-def clean_model(m: pydantic.BaseModel) -> dict:
+def clean_model(m: BaseModel) -> dict:
     return json.loads(m.json())
 
 def write_user(user: User):
@@ -98,4 +122,13 @@ def delete_list(todo_list: TodoList):
     table = get_list_table()
     res = table.delete_item(Key={"list_id": todo_list.list_id})
     return res["ResponseMetadata"]["HTTPStatusCode"] == 200
+
+
+########## Higher Level Operations ##############
+
+
+
+
+
+
 

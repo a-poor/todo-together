@@ -6,7 +6,7 @@ Globals:
     PackageType: Image
     Environment:
       Variables:
-        API_VERSION: 1.0.0
+        API_VERSION: 1.0
         JWT_ALGORITHM: HS256
         USER_TABLE: TodoTogetherUsers
         LIST_TABLE: TodoTogetherLists

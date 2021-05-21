@@ -1,7 +1,19 @@
 
+from enum import Enum
 from typing import List, Optional
 from datetime import datetime
 from pydantic import BaseModel
+
+
+class TokenIs(Enum):
+    GOOD = 0
+    MALFORMED = 1
+    EXPIRED = 2
+    TOO_EARLY = 3
+    SIGNATURE_MISMATCH = 4
+    UNKNOWN_ERR = 5
+
+
 
 class User(BaseModel):
     user_id: str
