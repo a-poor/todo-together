@@ -240,7 +240,3 @@ def user_create_list(user: User, list_info: dict):
     
 
 
-
-
-
-

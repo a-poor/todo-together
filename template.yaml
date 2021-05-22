@@ -3,7 +3,10 @@ Transform: AWS::Serverless-2016-10-31
 Globals:
   Function:
     Timeout: 15
-    PackageType: Image
+    Handler: app.handler
+    Runtime: python3.8
+    Layers:
+    - !GetAtt BaseLayer.Arn
     Environment:
       Variables:
         API_VERSION: 1.0
@@ -48,9 +51,22 @@ Resources:
       - Key: project
         Value: todo-together
 
+  BaseLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: ./base-layer/
+      LayerName: TodoBaseLayer
+      CompatibleRuntimes:
+      - python3.8
+      RetentionPolicy: Retain
+      Tags:
+      - Key: project
+        Value: todo-together
+
   IndexFunction:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: ./lambda-functions/users/index/
       Events:
         HelloWorld:
           Type: Api
@@ -58,14 +74,11 @@ Resources:
             Path: /
             Method: get
             RestApiId: !Ref TodoAPI
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./lambda-functions/users/index/
-      DockerTag: python3.8-v1
 
   AuthFunction:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: ./lambda-functions/auth/
       Events:
         HelloWorld:
           Type: Api
@@ -73,14 +86,11 @@ Resources:
             Path: /auth
             Method: post
             RestApiId: !Ref TodoAPI
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./lambda-functions/auth/
-      DockerTag: python3.8-v1
 
   ListUsersFunction:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: ./lambda-functions/users/index/
       Events:
         HelloWorld:
           Type: Api
@@ -88,14 +98,11 @@ Resources:
             Path: /users
             Method: get
             RestApiId: !Ref TodoAPI
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./lambda-functions/users/index/
-      DockerTag: python3.8-v1
 
   NewUserFunction:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: ./lambda-functions/users/new/
       Events:
         HelloWorld:
           Type: Api
@@ -103,29 +110,23 @@ Resources:
             Path: /users/new
             Method: get
             RestApiId: !Ref TodoAPI
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./lambda-functions/users/new/
-      DockerTag: python3.8-v1
 
   GetUserFunction:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: ./lambda-functions/users/user/
       Events:
         HelloWorld:
           Type: Api
           Properties:
-            Path: /users/{UserId}
+            Path: /users/{user_id}
             Method: get
             RestApiId: !Ref TodoAPI
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./lambda-functions/users/user/
-      DockerTag: python3.8-v1
 
   ListListsFunction:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: ./lambda-functions/lists/index/
       Events:
         HelloWorld:
           Type: Api
@@ -133,14 +134,11 @@ Resources:
             Path: /lists
             Method: get
             RestApiId: !Ref TodoAPI
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./lambda-functions/lists/index/
-      DockerTag: python3.8-v1
 
   NewListFunction:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: ./lambda-functions/lists/new/
       Events:
         HelloWorld:
           Type: Api
@@ -148,29 +146,23 @@ Resources:
             Path: /lists/new
             Method: get
             RestApiId: !Ref TodoAPI
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./lambda-functions/lists/new/
-      DockerTag: python3.8-v1
 
   GetListFunction:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: ./lambda-functions/lists/list/
       Events:
         HelloWorld:
           Type: Api
           Properties:
-            Path: /lists/{ListId}
+            Path: /lists/{list_id}
             Method: get
             RestApiId: !Ref TodoAPI
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./lambda-functions/lists/list/
-      DockerTag: python3.8-v1
 
   LogEventFunction:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: ./lambda-functions/event/
       Events:
         HelloWorld:
           Type: Api
@@ -178,12 +170,7 @@ Resources:
             Path: /event
             Method: get
             RestApiId: !Ref TodoAPI
-    Metadata:
-      Dockerfile: Dockerfile
-      DockerContext: ./lambda-functions/event/
-      DockerTag: python3.8-v1
 
-  
 
 Outputs:
   HelloWorldApi:
