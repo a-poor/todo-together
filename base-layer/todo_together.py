@@ -1,6 +1,6 @@
 import os
 import json
-import uuid as _uuid
+import string
 import random
 import datetime as dt
 from typing import Tuple
@@ -28,8 +28,15 @@ JWT_SECRET_NAME = os.environ["JWT_SECRET_NAME"]
 
 ########## Lower Level Operations ##############
 
-def new_uuid() -> str: 
-    return str(_uuid.uuid4())
+def rstring(n: int = 6) -> str:
+    chars = string.ascii_lowercase + string.digits
+    return "".join(random.choices(chars, k=n))
+
+def new_user_id(n: int = 6) -> str:
+    return "u" + rstring(n)
+
+def new_list_id(n: int = 6) -> str:
+    return "l" + rstring(n)
 
 def hash_password(password: str) -> str:
     min_rounds =  6
@@ -168,7 +175,7 @@ def get_user_jwt(user: User) -> str:
     return create_token({ "user_id": user.user_id })
 
 def create_user(user_info: dict):
-    uid = new_uuid()
+    uid = new_user_id()
     password = hash_password(user_info["password"])
     user = User(
         user_id=uid,
@@ -184,7 +191,7 @@ def update_user(user: User):
     return write_user(user)
 
 def create_list(list_info: dict):
-    uid = new_uuid()
+    uid = new_list_id()
     list_ = TodoList(list_id=uid,**list_info)
     write_list(list_)
     return list_
