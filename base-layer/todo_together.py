@@ -3,6 +3,7 @@ import json
 import uuid as _uuid
 import random
 import datetime as dt
+from typing import Tuple
 
 import jwt
 import bcrypt
@@ -19,14 +20,11 @@ from todo_models import (
 
 
 API_VERSION = os.environ["API_VERSION"]
+USER_TABLE_NAME = os.environ["USER_TABLE"]
+LIST_TABLE_NAME = os.environ["LIST_TABLE"]
 JWT_ALGORITHM = os.environ["JWT_ALGORITHM"]
 TOKEN_EXPIRY_MINS = int(os.environ["TOKEN_EXPIRY_MINS"])
-USER_TABLE_NAME = os.environ["USER_TABLE_NAME"]
-LIST_TABLE_NAME = os.environ["LIST_TABLE_NAME"]
 JWT_SECRET_NAME = os.environ["JWT_SECRET_NAME"]
-TOKEN_EXPIRY_MINS = os.environ["TOKEN_EXPIRY_MINS"]
-
-
 
 ########## Lower Level Operations ##############
 
@@ -38,59 +36,68 @@ def hash_password(password: str) -> str:
     max_rounds = 10
     rounds = random.randrange(min_rounds, max_rounds)
     salt = bcrypt.gensalt(rounds)
-    return bcrypt.hashpw(password.encode(), salt).decode()
+    return bcrypt.hashpw(password.encode(), salt)
 
-def compare_passwords(password: str, hashed: str) -> bool:
-    return bcrypt.checkpw(password.encode(),
-        hashed.encode())
+def compare_passwords(password: str, hashed: bytes) -> bool:
+    return bcrypt.checkpw(password.encode(),hashed)
 
 def get_jwt_secret() -> str:
     session = boto3.session.Session()
     client = session.client("secretsmanager")
-    res = client.get_secret_value(SecretId=JWT_SECRET_NAME)
+    res = client.get_secret_value(
+        SecretId=JWT_SECRET_NAME
+    )
     return res["SecretString"]
 
 def create_token(payload) -> str:
     secret = get_jwt_secret()
     exp = dt.datetime.utcnow() + dt.timedelta(minutes=TOKEN_EXPIRY_MINS)
-    return jwt.encode(
+    token = jwt.encode(
         {**payload, "exp": exp}, 
         secret, 
         algorithm=JWT_ALGORITHM
-    ).decode()
+    )
+    return token.decode() if isinstance(token,bytes) else token
 
 def check_token(token: str, verify=True):
+    secret = get_jwt_secret()
     try:
-        data = jwt.decode(token.encode(),algorithms=JWT_ALGORITHM,verify=verify)
+        data = jwt.decode(
+            token,
+            secret,
+            algorithms=JWT_ALGORITHM,
+            verify=verify
+        )
     except jwt.exceptions.ExpiredSignatureError:
         # Still try to get the user's token info
         return check_token(token,False)[0], TokenIs.EXPIRED
     except jwt.exceptions.ImmatureSignatureError:
         # Still try to get the user's token info
         return check_token(token,False)[0], TokenIs.TOO_EARLY
-    except jwt.exceptions.DecodeError:
+    except jwt.exceptions.DecodeError as e:
         return None, TokenIs.MALFORMED
     except jwt.exceptions.PyJWTError:
         return None, TokenIs.UNKNOWN_ERR
     except Exception as e:
         print(f"Unknown error checking JWT: {e}")
-        return None, TokenIs.UNKNOWN_ERR
+        raise e
+        #return None, TokenIs.UNKNOWN_ERR
     return data, TokenIs.GOOD
 
 def get_user_table() -> 'DynamoDB.Table':
-    return boto3.client("dynamodb").Table(USER_TABLE_NAME)
+    return boto3.resource("dynamodb").Table(USER_TABLE_NAME)
 
 def get_list_table() -> 'DynamoDB.Table':
-    return boto3.client("dynamodb").Table(LIST_TABLE_NAME)
+    return boto3.resource("dynamodb").Table(LIST_TABLE_NAME)
 
 def get_all_users():
     table = get_user_table()
     data = []
     last_key = None
     while True:
-        res = table.scan(
-            ExclusiveStartKey=last_key
-        )
+        kwargs = {} if last_key is None else \
+            dict(ExclusiveStartKey=last_key)
+        res = table.scan(**kwargs)
         data.extend(res["Items"])
         last_key = res.get("LastEvaluatedKey")
         if last_key is None: break
@@ -103,12 +110,14 @@ def get_user_by_username(username: str):
 
 def get_user(user_id: str) -> User:
     table = get_user_table()
-    user = table.get_item(Key={"user_id": user_id})
+    res = table.get_item(Key={"user_id": user_id})
+    user = res["Item"]
     return User(**user) if user is not None else None
 
 def get_list(list_id: str) -> TodoList:
     table = get_list_table()
-    list_ = table.get_item(Key={"list_id": list_id})
+    res = table.get_item(Key={"list_id": list_id})
+    list_ = res["Item"]
     return User(**list_) if list_ is not None else None 
 
 def user_exists(user_id: str) -> bool:
@@ -160,7 +169,14 @@ def get_user_jwt(user: User) -> str:
 
 def create_user(user_info: dict):
     uid = new_uuid()
-    user = User(user_id=uid,**user_info)
+    password = hash_password(user_info["password"])
+    user = User(
+        user_id=uid,
+        **{
+            **user_info,
+            "password": password
+        }
+    )
     write_user(user)
     return user
 
@@ -178,16 +194,42 @@ def update_list(list_: TodoList):
 
 def get_user_data_full(user: User):
     """User's own view of data"""
-    data = user.json()
-    hidden_fields = ("password")
-    return {k: v for k, v in data.items() if k not in hidden_fields}
+    data = clean_model(user)
+    fields = (
+        "user_id",
+        "username",
+        "name",
+        "created_at",
+        "friends",
+        "todo_lists",
+        "requests_out",
+        "requests_in",
+    )
+    return {f: data[f] for f in fields}
 
 def get_user_data_part(user: User):
     """User's view of other User's data"""
-    data = user.json()
-    hidden_fields = ("password","created_at",
-        "requests_out","requests_in")
-    return {k: v for k, v in data.items() if k not in hidden_fields}
+    data = clean_model(user)
+    fields = (
+        "user_id",
+        "username",
+        "name"
+    )
+    return {f: data[f] for f in fields}
+
+def get_list_data(list_: TodoList):
+    """User's view of other User's data"""
+    data = clean_model(list_)
+    fields = (
+        "list_id",
+        "name",
+        "items",
+        "created_by",
+        "created_at",
+        "access",
+        "archived"
+    )
+    return {f: data[f] for f in fields}
 
 def add_friend_request(ufrom: User, uto: User):
     from_id = ufrom.user_id
@@ -237,6 +279,35 @@ def user_create_list(user: User, list_info: dict):
     user.todo_lists.append(new_list.list_id)
     update_user(user)
     return new_list
-    
 
+
+def auth_user(event: dict) -> Tuple[User,dict]:
+    try:
+        auth_token = event["headers"]["Authorization"]
+        assert auth_token.startswith("Bearer ")
+        auth_token = auth_token.split(" ")[1]
+    except Exception as e:
+        print("Error getting `token` from `Authorization` header.")
+        return None, {
+            "statusCode": 401,
+            "body": json.dumps({
+                "success": False,    
+                "message": "Error getting `token` from `Authorization` header.",
+            })
+        }
+    try:
+        token_status = None
+        data, token_status = check_token(auth_token)
+        assert token_status == TokenIs.GOOD
+        req_user = get_user(data["user_id"])
+    except Exception as e:
+        print("Error getting `token` from `Authorization` header.")
+        return None, {
+            "statusCode": 401,
+            "body": json.dumps({
+                "success": False,    
+                "message": "Unable to authenticate.",
+            })
+        }
+    return req_user, None    
 

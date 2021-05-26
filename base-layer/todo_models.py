@@ -19,7 +19,7 @@ class User(BaseModel):
     user_id: str
     username: str
     name: str
-    password: str # hashed
+    password: bytes # hashed
     created_at: datetime
     friends: List[str] = []
     todo_lists: List[str] = []

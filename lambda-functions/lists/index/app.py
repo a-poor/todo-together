@@ -1,34 +1,40 @@
-import os
+import sys
+sys.path.append("/opt")
+
 import json
-
-import boto3
-
-
-def get_all_items(table):
-    data = []
-    ExclusiveStartKey = None
-    while True:
-        resp = table.scan(
-            ExclusiveStartKey=ExclusiveStartKey
-        )
-        data.extend(resp['Items'])
-        if "LastEvaluatedKey" not in resp: break
-        else: ExclusiveStartKey = resp["ExclusiveStartKey"]
-    return data
+import itertools as it
+import todo_together as todo
 
 
 def lambda_handler(event, context):
-    list_table_name = os.environ["LIST_TABLE"]
-    dynamodb = boto3.client("dynamodb")
-    table = dynamodb.Table(list_table_name)
+    req_user, err = todo.auth_user(event)
+    if err: return err
 
-    list_info = get_all_items()
+    # Get User's friends
+    friends = [todo.get_user(uid)
+        for uid in req_user.friends]
+
+    # Get User's friends' lists (if user has access)
+    friend_lists = it.chain(*[f.todo_lists for f in friends])
+    friend_lists = [l for l in friend_lists if 
+        req_user.user_id in l.access and not l.archived]
+
+    # Merge users lists with friends' lists
+    all_lists = [
+        *req_user.todo_lists,
+        *friend_lists
+    ]
+
+    return_data = [
+        todo.get_list_data(l)
+        for l in all_lists
+    ]
 
     return {
         "statusCode": 200,
         "body": json.dumps({
             "success": True,    
-            "users": list_info,
+            "lists": return_data,
         })
     }
 

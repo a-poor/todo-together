@@ -1,5 +1,8 @@
 import os
 import json
+import sys
+sys.path.append("/opt")
+import todo_together
 
 
 def lambda_handler(event, context):
