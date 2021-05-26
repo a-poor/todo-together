@@ -1,4 +1,4 @@
-# ToDo-Together
+# ToDo-Together API
 
 _created by Austin Poor_
 
