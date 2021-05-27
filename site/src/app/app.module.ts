@@ -10,7 +10,8 @@ import { AppMainComponent } from './app-main/app-main.component';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSidenavModule } from '@angular/material/sidenav'; 
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { TodoListComponent } from './todo-list/todo-list.component'; 
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     AppComponent,
     ToolbarComponent,
     NavComponent,
-    AppMainComponent
+    AppMainComponent,
+    TodoListComponent
   ],
   imports: [
     BrowserModule,
