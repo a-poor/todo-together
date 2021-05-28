@@ -13,27 +13,38 @@ function App() {
     <div className="App">
       <Layout>
         <Header className="header">
-          <Row>
+          <Row
+            wrap={false}
+          >
             <Col span={ 10 }>
-              <Typography.Title style={{ color: "white" }}>ToDo Together</Typography.Title>
+              <Typography.Title 
+                level={ 2 } 
+                style={{ 
+                  color: "white",
+                  paddingTop: "10px",
+                  paddingBottom: "5px",
+                }}
+                >
+                ToDo Together
+              </Typography.Title>
             </Col>
             <Col span={ 5 } offset={ 9 }>
               <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} style={{  }}>
-                <Tooltip title="ToDo Lists">
-                  <Menu.Item key="1">
+                <Menu.Item key="1" onClick={()=>console.log("Clicked 1")} onSelect={()=>console.log("Selected 1")}>
+                  <Tooltip title="ToDo Lists">
                     <FormOutlined style={{ fontSize: "24px" }}/>
-                  </Menu.Item>
-                </Tooltip>
-                <Tooltip title="Friends">
-                  <Menu.Item key="2">
+                  </Tooltip>
+                </Menu.Item>
+                <Menu.Item key="2" onClick={()=>console.log("Clicked 2")} onSelect={()=>console.log("Selected 2")}>
+                  <Tooltip title="Friends">
                     <UserOutlined style={{ fontSize: "24px" }}/>
-                  </Menu.Item>
-                </Tooltip>
-                <Tooltip title="Settings">
-                  <Menu.Item key="3">
+                  </Tooltip>
+                </Menu.Item>
+                <Menu.Item key="3" onClick={()=>console.log("Clicked 3")} onSelect={()=>console.log("Selected 3")}>
+                  <Tooltip title="Settings">
                     <SettingOutlined style={{ fontSize: "24px" }}/>
-                  </Menu.Item>
-                </Tooltip>
+                  </Tooltip>
+                </Menu.Item>
               </Menu>
             </Col>
           </Row>
@@ -66,12 +77,14 @@ function App() {
               </SubMenu>
             </Menu>
           </Sider> */}
+          {/* <Space></Space> */}
+          <div style={{ height: "24px" }}/>
           <Layout style={{ padding: '0 24px 24px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
+            {/* <Breadcrumb style={{ margin: '16px 0' }}>
               <Breadcrumb.Item>Home</Breadcrumb.Item>
               <Breadcrumb.Item>List</Breadcrumb.Item>
               <Breadcrumb.Item>App</Breadcrumb.Item>
-            </Breadcrumb>
+            </Breadcrumb> */}
             <Content
               className="site-layout-background"
               style={{
@@ -107,7 +120,7 @@ function TodoList({ items = [] }) {
   return <> 
     <List 
       header={ <h1>Header</h1> }
-      boardered
+      bordered
       dataSource={ items }
       renderItem={ d => <ListItem {...d}/>}
     />
