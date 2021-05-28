@@ -1,4 +1,4 @@
-import { Layout, Menu, Breadcrumb, List, Checkbox, Typography, Space, Tooltip, Row, Col } from 'antd';
+import { Layout, Menu, Breadcrumb, List, Checkbox, Typography, Space, Tooltip, Row, Col, Avatar } from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined, FormOutlined, SettingOutlined } from '@ant-design/icons';
 
 import './App.css';
@@ -25,7 +25,7 @@ function App() {
                   paddingBottom: "5px",
                 }}
                 >
-                ToDo Together
+                ToDoTogether
               </Typography.Title>
             </Col>
             <Col span={ 5 } offset={ 9 }>
@@ -50,41 +50,8 @@ function App() {
           </Row>
         </Header>
         <Layout>
-          {/* <Sider width={200} className="site-layout-background">
-            <Menu
-              mode="inline"
-              defaultSelectedKeys={['1']}
-              defaultOpenKeys={['sub1']}
-              style={{ height: '100%', borderRight: 0 }}
-            >
-              <SubMenu key="sub1" icon={<UserOutlined />} title="subnav 1">
-                <Menu.Item key="1">option1</Menu.Item>
-                <Menu.Item key="2">option2</Menu.Item>
-                <Menu.Item key="3">option3</Menu.Item>
-                <Menu.Item key="4">option4</Menu.Item>
-              </SubMenu>
-              <SubMenu key="sub2" icon={<LaptopOutlined />} title="subnav 2">
-                <Menu.Item key="5">option5</Menu.Item>
-                <Menu.Item key="6">option6</Menu.Item>
-                <Menu.Item key="7">option7</Menu.Item>
-                <Menu.Item key="8">option8</Menu.Item>
-              </SubMenu>
-              <SubMenu key="sub3" icon={<NotificationOutlined />} title="subnav 3">
-                <Menu.Item key="9">option9</Menu.Item>
-                <Menu.Item key="10">option10</Menu.Item>
-                <Menu.Item key="11">option11</Menu.Item>
-                <Menu.Item key="12">option12</Menu.Item>
-              </SubMenu>
-            </Menu>
-          </Sider> */}
-          {/* <Space></Space> */}
           <div style={{ height: "24px" }}/>
           <Layout style={{ padding: '0 24px 24px' }}>
-            {/* <Breadcrumb style={{ margin: '16px 0' }}>
-              <Breadcrumb.Item>Home</Breadcrumb.Item>
-              <Breadcrumb.Item>List</Breadcrumb.Item>
-              <Breadcrumb.Item>App</Breadcrumb.Item>
-            </Breadcrumb> */}
             <Content
               className="site-layout-background"
               style={{
@@ -93,7 +60,14 @@ function App() {
                 minHeight: 280,
               }}
             >
-              <TodoList items={data}/>
+              <Row>
+                <Col span={ 18 }>
+                  <TodoList items={ todo_data }/>
+                </Col>
+                <Col span={ 5 } offset={ 1 }>
+                  <FriendList items={ friend_data }/>
+                </Col>
+              </Row>
             </Content>
           </Layout>
         </Layout>
@@ -102,13 +76,21 @@ function App() {
   );
 }
 
-const data = [
+
+const friend_data = [
+  {name: "Me", color: "#ff4d4f"},
+  {name: "Sally", color: "#40a9ff"},
+  {name: "Tim", color: "#ff7a45"},
+  {color: "#bae637"},
+];
+
+const todo_data = [
   {text: "Milk", isChecked: false},
   {text: "Cookies", isChecked: true},
 
 ];
 
-function ListItem({ text = "", isChecked = false }) {
+function TodoListItem({ text = "", isChecked = false }) {
   return <List.Item>
     <Checkbox >
       <Text>{ text }</Text>
@@ -116,13 +98,33 @@ function ListItem({ text = "", isChecked = false }) {
   </List.Item>
 }
 
-function TodoList({ items = [] }) {
+function TodoList({ list_title = "Your List", items = [] }) {
   return <> 
     <List 
-      header={ <h1>Header</h1> }
-      bordered
+      header={ <h1>{ list_title }</h1> }
+      // bordered
       dataSource={ items }
-      renderItem={ d => <ListItem {...d}/>}
+      renderItem={ d => <TodoListItem {...d}/>}
+    />
+  </>;
+}
+
+function FriendListItem({ name = "", color="", isChecked = false }) {
+  return <List.Item>
+      <Space>
+        { name ? <Avatar style={{ backgroundColor: color }}>{name[0]}</Avatar> : <Avatar icon={ <UserOutlined /> } style={{ backgroundColor: color }}/> }
+        { name }
+      </Space>
+  </List.Item>
+}
+
+function FriendList({ items = [] }) {
+  return <> 
+    <List 
+      header={ <h1>ToDoers</h1> }
+      // bordered
+      dataSource={ items }
+      renderItem={ d => <FriendListItem {...d}/>}
     />
   </>;
 }
