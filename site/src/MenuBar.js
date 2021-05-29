@@ -1,52 +1,83 @@
 import React, { useState } from 'react';
 import { Layout, Menu, Breadcrumb, List, Checkbox, Typography, Space, Tooltip, Row, Col, Avatar } from 'antd';
-import { UserOutlined, LaptopOutlined, NotificationOutlined, FormOutlined, SettingOutlined } from '@ant-design/icons';
+import { MenuUnfoldOutlined, UserOutlined, LogoutOutlined, NotificationOutlined, FormOutlined, SettingOutlined } from '@ant-design/icons';
+
+import { useWindowSize } from './hooks';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 const { Text } = Typography;
 
-function MenuBar() {
-    const [ tabKey, setTabKey ] = useState("lists");
-    return <>
-        <Header className="header">
-            <Row
-            wrap={false}
+function MenuBar({ tabKey, setTabKey }) {
+  const windowSize = useWindowSize();
+
+  return <>
+    <Header className="header">
+      <Row
+        wrap={false}
+        >
+        <Col span={8}>
+          <Menu 
+            theme="dark" 
+            mode="horizontal" 
+            defaultSelectedKeys={[ tabKey ]} 
+            style={{ color: "white" }}
             >
-            <Col span={ 10 }>
-                <Typography.Title 
-                level={ 2 } 
-                style={{ 
-                    color: "white",
-                    paddingTop: "10px",
-                    paddingBottom: "5px",
-                }}
+            <SubMenu
+              key=""
+              icon={ <MenuUnfoldOutlined style={{ fontSize: "24px" }}/> }
+              >
+              <Menu.Item 
+                key="lists" 
+                onClick={() => setTabKey("lists")} 
                 >
-                ToDoTogether
-                </Typography.Title>
-            </Col>
-            <Col span={ 5 } offset={ 9 }>
-                <Menu theme="dark" mode="horizontal" defaultSelectedKeys={[tabKey]} style={{  }}>
-                <Menu.Item key="lists" onClick={() => setTabKey("lists")} onSelect={()=>console.log("Selected 1")}>
-                    <Tooltip title="ToDo Lists">
-                    <FormOutlined style={{ fontSize: "24px" }}/>
-                    </Tooltip>
-                </Menu.Item>
-                <Menu.Item key="friends" onClick={() => setTabKey("friends")} onSelect={()=>console.log("Selected 2")}>
-                    <Tooltip title="Friends">
-                    <UserOutlined style={{ fontSize: "24px" }}/>
-                    </Tooltip>
-                </Menu.Item>
-                <Menu.Item key="settings" onClick={() => setTabKey("settings")} onSelect={()=>console.log("Selected 3")}>
-                    <Tooltip title="Settings">
-                    <SettingOutlined style={{ fontSize: "24px" }}/>
-                    </Tooltip>
-                </Menu.Item>
-                </Menu>
-            </Col>
-            </Row>
-        </Header>
-    </>;
+                <FormOutlined style={{ fontSize: "24px" }}/>
+                <Text style={{ color: "white" }}>To-Do Lists</Text>
+              </Menu.Item>
+              <Menu.Item 
+                key="friends" 
+                onClick={() => setTabKey("friends")} 
+                >
+                <UserOutlined style={{ fontSize: "24px" }}/>
+                <Text style={{ color: "white" }}>Friends</Text>
+              </Menu.Item>
+              <Menu.Item 
+                key="settings" 
+                onClick={() => setTabKey("settings")} 
+                >
+                <SettingOutlined style={{ fontSize: "24px" }}/>
+                <Text style={{ color: "white" }}>Settings</Text>
+              </Menu.Item>
+              <Menu.Item 
+                key="sign-out" 
+                onClick={() => { 
+                  console.log("SIGNED OUT"); 
+                  setTabKey("lists"); 
+                }} 
+                disabled
+                >
+                <LogoutOutlined style={{ fontSize: "24px" }}/>
+                <Text style={{ color: "white" }}>Logout</Text>
+              </Menu.Item>
+            </SubMenu>
+          </Menu>
+        </Col>
+        <Col span={8}>
+          <Typography.Title 
+            level={ 2 } 
+            style={{ 
+              textAlign: "center",
+              color: "white",
+              paddingTop: "10px",
+              paddingBottom: "5px",
+            }}
+            >
+            { windowSize.width < 750 ? "TDTG" : "ToDoTogether" }
+          </Typography.Title>
+        </Col>
+      </Row>
+    </Header>
+  </>;
 }
 
 export default MenuBar;
