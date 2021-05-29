@@ -4,6 +4,14 @@ import { UserOutlined, LaptopOutlined, NotificationOutlined, FormOutlined, Setti
 import './App.css';
 import 'antd/dist/antd.css';
 
+import React from 'react';
+
+import MenuBar from './MenuBar';
+import TodoPage from './TodoListPage/TodoListPage';
+import FriendsPage from './FriendsPage/FriendsPage';
+import SettingsPage from './SettingsPage/SettingsPage';
+import AllListsPage from './AllListsPage/AllListsPage';
+
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 const { Text } = Typography;
@@ -12,43 +20,7 @@ function App() {
   return (
     <div className="App">
       <Layout>
-        <Header className="header">
-          <Row
-            wrap={false}
-          >
-            <Col span={ 10 }>
-              <Typography.Title 
-                level={ 2 } 
-                style={{ 
-                  color: "white",
-                  paddingTop: "10px",
-                  paddingBottom: "5px",
-                }}
-                >
-                ToDoTogether
-              </Typography.Title>
-            </Col>
-            <Col span={ 5 } offset={ 9 }>
-              <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} style={{  }}>
-                <Menu.Item key="1" onClick={()=>console.log("Clicked 1")} onSelect={()=>console.log("Selected 1")}>
-                  <Tooltip title="ToDo Lists">
-                    <FormOutlined style={{ fontSize: "24px" }}/>
-                  </Tooltip>
-                </Menu.Item>
-                <Menu.Item key="2" onClick={()=>console.log("Clicked 2")} onSelect={()=>console.log("Selected 2")}>
-                  <Tooltip title="Friends">
-                    <UserOutlined style={{ fontSize: "24px" }}/>
-                  </Tooltip>
-                </Menu.Item>
-                <Menu.Item key="3" onClick={()=>console.log("Clicked 3")} onSelect={()=>console.log("Selected 3")}>
-                  <Tooltip title="Settings">
-                    <SettingOutlined style={{ fontSize: "24px" }}/>
-                  </Tooltip>
-                </Menu.Item>
-              </Menu>
-            </Col>
-          </Row>
-        </Header>
+        <MenuBar />
         <Layout>
           <div style={{ height: "24px" }}/>
           <Layout style={{ padding: '0 24px 24px' }}>
@@ -73,6 +45,7 @@ function App() {
               </Row>
             </Content>
           </Layout>
+          <AllListsPage />
         </Layout>
       </Layout>
     </div>
