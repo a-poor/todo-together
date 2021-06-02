@@ -3,10 +3,12 @@ import { UserOutlined, LaptopOutlined, NotificationOutlined, FormOutlined, Setti
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 function SettingsPage() {
-    return <></>;
+    return <>
+        <Title>Settings</Title>
+    </>;
 }
 
 export default SettingsPage;

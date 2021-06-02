@@ -12,55 +12,65 @@ import FriendsPage from './FriendsPage/FriendsPage';
 import SettingsPage from './SettingsPage/SettingsPage';
 import AllListsPage from './AllListsPage/AllListsPage';
 
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect
+} from "react-router-dom";
+
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 const { Text } = Typography;
 
 function App() {
   const [ tabKey, setTabKey ] = useState("lists");
-  const getTab = t => {
-    switch (t) {
-      case 'lists':
-        return <AllListsPage />;
-      case 'friends':
-        return <FriendsPage />;
-      case 'settings':
-        return <SettingsPage />;
-    }
-  };
 
   return (
-    <div className="App">
-      <Layout>
-        <MenuBar {...{tabKey, setTabKey}}/>
+    <Router className="App">
+      <div className="App">
         <Layout>
-          <div style={{ height: "24px" }}/>
-          <Layout style={{ padding: '0 24px 24px' }}>
-            <Content
-              className="site-layout-background"
-              style={{
-                padding: 24,
-                margin: 0,
-                minHeight: 280,
-              }}
-              >
-              <Typography.Title>{
-                {
-                  lists: "Your To-Do Lists",
-                  friends: "Your Friends",
-                  settings: "Account Settings"
-                }[tabKey]  
-              }</Typography.Title>
-              { getTab(tabKey) }
-
-              <Divider />
-
-              <TodoListPage />
-            </Content>
+          <MenuBar {...{tabKey, setTabKey}}/>
+          <Layout>
+            <div style={{ height: "24px" }}/>
+            <Layout style={{ padding: '0 24px 24px' }}>
+              <Content
+                className="site-layout-background"
+                style={{
+                  padding: 24,
+                  margin: 0,
+                  minHeight: 280,
+                }}
+                >
+                <Switch>
+                  <Route path="/settings">
+                    <SettingsPage />
+                  </Route>
+                  <Route path="/friends">
+                    <FriendsPage />
+                  </Route>
+                  <Route 
+                    path="/lists/:listid"
+                    exact
+                    render={({ match }) => {
+                      const lid = match.params.listid;
+                      return <p>List ID: { lid } :: { JSON.stringify(match) }</p>
+                    }}
+                  />
+                  <Route path="/lists">
+                    <Redirect to="/"/>
+                  </Route>
+                  <Route path="/">
+                    <AllListsPage />
+                  </Route>
+                </Switch>
+              </Content>
+            </Layout>
           </Layout>
         </Layout>
-      </Layout>
-    </div>
+      </div>
+    </Router>
   );
 }
 

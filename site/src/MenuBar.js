@@ -4,6 +4,14 @@ import { MenuUnfoldOutlined, UserOutlined, LogoutOutlined, NotificationOutlined,
 
 import { useWindowSize } from './hooks';
 
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect
+} from "react-router-dom";
+
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 const { Text } = Typography;
@@ -31,22 +39,28 @@ function MenuBar({ tabKey, setTabKey }) {
                 key="lists" 
                 onClick={() => setTabKey("lists")} 
                 >
-                <FormOutlined style={{ fontSize: "24px" }}/>
-                <Text style={{ color: "white" }}>To-Do Lists</Text>
+                <Link to="/">
+                  <FormOutlined style={{ fontSize: "24px" }}/>
+                  <Text style={{ color: "white" }}>To-Do Lists</Text>
+                </Link>
               </Menu.Item>
               <Menu.Item 
                 key="friends" 
                 onClick={() => setTabKey("friends")} 
                 >
-                <UserOutlined style={{ fontSize: "24px" }}/>
-                <Text style={{ color: "white" }}>Friends</Text>
+                <Link to="/friends">
+                  <UserOutlined style={{ fontSize: "24px" }}/>
+                  <Text style={{ color: "white" }}>Friends</Text>
+                </Link>
               </Menu.Item>
               <Menu.Item 
                 key="settings" 
                 onClick={() => setTabKey("settings")} 
                 >
-                <SettingOutlined style={{ fontSize: "24px" }}/>
-                <Text style={{ color: "white" }}>Settings</Text>
+                <Link to="/settings">
+                  <SettingOutlined style={{ fontSize: "24px" }}/>
+                  <Text style={{ color: "white" }}>Settings</Text>
+                </Link>
               </Menu.Item>
               <Menu.Item 
                 key="sign-out" 
@@ -56,6 +70,7 @@ function MenuBar({ tabKey, setTabKey }) {
                 }} 
                 disabled
                 >
+
                 <LogoutOutlined style={{ fontSize: "24px" }}/>
                 <Text style={{ color: "white" }}>Logout</Text>
               </Menu.Item>
