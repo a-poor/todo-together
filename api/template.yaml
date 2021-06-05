@@ -6,7 +6,7 @@ Globals:
     Handler: app.lambda_handler
     Runtime: python3.8
     Layers:
-    - !Ref BaseLayer
+      - !Ref BaseLayer
     Environment:
       Variables:
         API_VERSION: 1.0
@@ -30,9 +30,6 @@ Resources:
         Name: user_id
         Type: String
       TableName: TodoTogetherUsers
-      # Tags:
-      #   - Key: project
-      #     Value: todo-together
 
   ListTable:
     Type: AWS::Serverless::SimpleTable
@@ -49,7 +46,6 @@ Resources:
       LayerName: TodoBaseLayer
       CompatibleRuntimes:
       - python3.8
-      # RetentionPolicy: Retain
 
   IndexFunction:
     Type: AWS::Serverless::Function

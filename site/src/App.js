@@ -22,6 +22,9 @@ import {
   Redirect
 } from "react-router-dom";
 
+import api from './api/index';
+
+
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 const { Text } = Typography;
