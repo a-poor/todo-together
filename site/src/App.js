@@ -11,6 +11,8 @@ import TodoListPage from './TodoListPage/TodoListPage';
 import FriendsPage from './FriendsPage/FriendsPage';
 import SettingsPage from './SettingsPage/SettingsPage';
 import AllListsPage from './AllListsPage/AllListsPage';
+import SignupPage from './SignupSignin/SignupPage';
+import SigninPage from './SignupSignin/SigninPage';
 
 import {
   BrowserRouter as Router,
@@ -44,6 +46,12 @@ function App() {
                 }}
                 >
                 <Switch>
+                <Route path="/sign-up">
+                    <SignupPage />
+                  </Route>
+                  <Route path="/sign-in">
+                    <SigninPage />
+                  </Route>
                   <Route path="/settings">
                     <SettingsPage />
                   </Route>
