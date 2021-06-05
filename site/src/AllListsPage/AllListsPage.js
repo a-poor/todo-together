@@ -23,6 +23,7 @@ const columns = [
         render: (users, record) => (
             <Link to={`/lists/${record.id}`}>
                 <Avatar.Group
+                    maxCount={ 3 }
                     size={{sm: "small", default: "default"}}
                     >
                     { users.map((u,i) => <Avatar key={i}>{ u[0].toUpperCase() }</Avatar> )}

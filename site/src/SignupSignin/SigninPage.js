@@ -1,20 +1,55 @@
-import { useState } from 'react';
-import { Layout, Menu, Breadcrumb, List, Checkbox, Typography, Space, Tooltip, Row, Col, Avatar, Form, Input, Button } from 'antd';
-import { UserOutlined, LaptopOutlined, NotificationOutlined, FormOutlined, SettingOutlined } from '@ant-design/icons';
+import { useHistory } from 'react-router-dom';
+import { Layout, Menu, Typography, Form, Input, Button } from 'antd';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 const { Text, Title } = Typography;
 
-function signinUser(username, password) {
-
-}
 
 function SigninPage() {
-    return <>
-        <Title>Sign In</Title>
+    const history = useHistory();
+    return <div
+        style={{
+            maxWidth: '500px',
+            margin: 'auto'
+        }}
+    >
+        <Title
+            style={{ textAlign: 'center' }}
+        >
+            Sign In
+        </Title>
         <Form
-            initialValues={{remember: true}}
+            layout="vertical"
+            style={{ 
+                maxWidth: '300px',
+                margin: 'auto'
+            }}
+            onFinish={({username, password}) => {
+                console.log("Finished!", JSON.stringify(username));
+                fetch(
+                    "/api/users/new",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            username,
+                            password
+                        })
+                    }
+                ).then(r => {
+                    throw new Error("");
+                }).then(r => {
+                    console.log("Successfully logged in!");
+                    console.log(r);
+                    history.push("/");
+                }).catch(e => {
+                    console.error("Error signing in: ", e);
+                })
+            }}
         >
             <Form.Item
                 label="Email"
@@ -42,7 +77,7 @@ function SigninPage() {
                 </Button>
             </Form.Item>
         </Form>
-    </>;
+    </div>;
 }
 
 export default SigninPage;
