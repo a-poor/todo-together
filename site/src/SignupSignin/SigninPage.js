@@ -1,13 +1,16 @@
-import { useHistory } from 'react-router-dom';
-import { Layout, Menu, Typography, Form, Input, Button } from 'antd';
+import { useState } from 'react';
+import { useHistory, Link } from 'react-router-dom';
+import { Layout, Menu, Typography, Form, Input, Button, Divider } from 'antd';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 const { Text, Title } = Typography;
 
 
-function SigninPage() {
+function SigninPage({ setUserData }) {
     const history = useHistory();
+    const [errorViz, setErrorViz] = useState(false);
+
     return <div
         style={{
             maxWidth: '500px',
@@ -19,6 +22,20 @@ function SigninPage() {
         >
             Sign In
         </Title>
+        <div
+            style={{ 
+                textAlign: 'center'
+            }}
+        >
+            <Text 
+                type="danger"
+                style={{ 
+                    display: errorViz ? 'inline' : 'none' 
+                }}
+            >
+                Oh no, error signing in!
+            </Text>
+        </div>
         <Form
             layout="vertical"
             style={{ 
@@ -40,14 +57,19 @@ function SigninPage() {
                             password
                         })
                     }
-                ).then(r => {
-                    throw new Error("");
-                }).then(r => {
-                    console.log("Successfully logged in!");
-                    console.log(r);
-                    history.push("/");
-                }).catch(e => {
+                )
+                .then(r => r.json())
+                .then(r => {
+                    if (r.success) {
+                        setUserData(r.user);
+                        history.push("/");
+                    } else {
+                        throw new Error("Error signing in:", r)
+                    }
+                })
+                .catch(e => {
                     console.error("Error signing in: ", e);
+                    setErrorViz(true);
                 })
             }}
         >
@@ -71,12 +93,20 @@ function SigninPage() {
             >
                 <Input.Password />
             </Form.Item>
-            <Form.Item>
+            <Form.Item style={{textAlign: 'center'}}>
                 <Button type="primary" htmlType="submit">
-                    Submit
+                    Sign In
                 </Button>
             </Form.Item>
         </Form>
+        <div style={{ maxWidth: "250px", margin: 'auto' }}>
+            <Divider/>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+            <Text>
+                Or, <Link to="/sign-up">Sign Up</Link> now!
+            </Text>
+        </div>
     </div>;
 }
 

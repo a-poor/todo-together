@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Typography, Space, Form, Input, Button } from 'antd';
+import { useHistory, Link } from 'react-router-dom';
+import { message, Typography, Space, Form, Input, Button } from 'antd';
 import { CheckCircleTwoTone, ExclamationCircleTwoTone } from '@ant-design/icons';
 
 const { Text, Title } = Typography;
@@ -52,7 +53,9 @@ function validatePassword(password = undefined) {
     };
 }
 
-function SignupPage() {
+function SignupPage({  }) {
+    const history = useHistory();
+
     // Check the password
     const [passLen,     setPassLen]     = useState(undefined);
     const [passUpper,   setPassUpper]   = useState(undefined);
@@ -64,7 +67,6 @@ function SignupPage() {
 
     // Check the password confirmation
     const [passMatch, setPassMatch] = useState(undefined);
-
 
     return <div
         style={{
@@ -84,6 +86,7 @@ function SignupPage() {
                 const password = fields.filter(f => f.name[0] === "password")[0]?.value;
                 const conf_pass = fields.filter(f => f.name[0] === "password-confirm")[0]?.value;
                 const pval = validatePassword(password);
+                
                 // Set password check values
                 setPassLen(pval.length);
                 setPassUpper(pval.upper);
@@ -91,8 +94,38 @@ function SignupPage() {
                 setPassNumber(pval.number);
                 setPassSymbol(pval.symbol);
                 setPassNoSpace(pval.noSpace);
+
                 // Set password match value
                 setPassMatch(password ? password === conf_pass : undefined);
+            }}
+            onFinish={data => {
+                if (data.password !== data["password-confirm"]) return;
+                const { username, password, name } = data;
+                fetch(
+                    "/api/users/new",
+                    {
+                        method: "POST",
+                        headers: {
+
+                        },
+                        body: JSON.stringify({
+                            name,
+                            username,
+                            password,
+                        })
+                    }
+                )
+                .then(r => r.json())
+                .then(r => {
+                    if (!r.success)
+                        throw new Error("Error: "+r.message);
+                    message.success("Successfully signed up!", 10);
+                    history.push("/sign-in");
+                })
+                .catch(e => {
+                    console.error(e);
+                    message.error("Error signing up: "+e, 10);
+                });
             }}
         >
             <Form.Item
@@ -172,10 +205,15 @@ function SignupPage() {
                     type="primary" 
                     htmlType="submit"
                 >
-                    Sign-Up
+                    Sign Up
                 </Button>
             </Form.Item>
         </Form>
+        <div style={{ textAlign: 'center' }}>
+            <Text>
+                Or, <Link to="/sign-in">Sign In</Link>!
+            </Text>
+        </div>
     </div>;
 }
 

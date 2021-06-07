@@ -31,9 +31,12 @@ const { Text } = Typography;
 
 function App() {
   const [ tabKey, setTabKey ] = useState("lists");
+  const [ userId, setUserId ] = useState(undefined);
+  const [ userToken, setUserToken ] = useState(undefined);
+  const [ userData, setUserData ] = useState(undefined);
 
   return (
-    <Router className="App">
+    <Router>
       <div className="App">
         <Layout>
           <MenuBar {...{tabKey, setTabKey}}/>

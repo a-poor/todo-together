@@ -1,5 +1,5 @@
 
-export async function getLists(token) {
+async function getLists(token) {
     const res = await fetch(
         "/api/lists",
         {
@@ -11,11 +11,13 @@ export async function getLists(token) {
             }
         }
     );
-    const data = await res.json();
-    return data.lists;
+    return await res.json();
+    // const data = await res.json();
+    // return data.lists;
 }
+exports.getLists = getLists;
 
-export async function newList(name, items = [], token = undefined) {
+async function newList(name, items = [], token = undefined) {
     const res = await fetch(
         "/api/lists/new",
         {
@@ -31,11 +33,13 @@ export async function newList(name, items = [], token = undefined) {
             })
         }
     );
-    const data = await res.json();
-    return data.list;
+    return await res.json();
+    // const data = await res.json();
+    // return data.list;
 }
+exports.newList = newList;
 
-export async function getList(listId, token) {
+async function getList(listId, token) {
     const res = await fetch(
         `/api/lists/${listId}`,
         {
@@ -46,11 +50,13 @@ export async function getList(listId, token) {
             }
         }
     );
-    const data = await res.json();
-    return data.list;
+    return await res.json();
+    // const data = await res.json();
+    // return data.list;
 }
+exports.getList = getList;
 
-export async function updateList(listId, data, token) {
+async function updateList(listId, data, token) {
     const res = await fetch(
         `/api/lists/${listId}`,
         {
@@ -62,11 +68,13 @@ export async function updateList(listId, data, token) {
             body: JSON.stringify(data)
         }
     );
-    const data = await res.json();
-    return data.list;
+    return await res.json();
+    // const res_data = await res.json();
+    // return res_data.list;
 }
+exports.updateList = updateList;
 
-export async function deleteList(listId, token) {
+async function deleteList(listId, token) {
     const res = await fetch(
         `/api/lists/${listId}`,
         {
@@ -77,7 +85,9 @@ export async function deleteList(listId, token) {
             }
         }
     );
-    const data = await res.json();
-    return data.success;
+    return await res.json();
+    // const data = await res.json();
+    // return data.success;
 }
+exports.deleteList = deleteList;
 

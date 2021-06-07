@@ -1,5 +1,5 @@
 
-export async function listUsers(token) {
+async function listUsers(token) {
     const res = await fetch(
         "/api/users",
         {
@@ -9,11 +9,13 @@ export async function listUsers(token) {
             }
         }
     );
-    const data = await res.json();
-    return data.users;
+    return await res.json();
+    // const data = await res.json();
+    // return data.users;
 }
+exports.listUsers = listUsers;
 
-export async function newUser(name, username, password) {
+async function newUser(name, username, password) {
     const res = fetch(
         "/api/users/new",
         {
@@ -29,11 +31,13 @@ export async function newUser(name, username, password) {
             })
         }
     );
-    const data = await res.json();
-    return data["user-id"];
+    return await res.json();
+    // const data = await res.json();
+    // return data["user-id"];
 }
+exports.newUser = newUser;
 
-export async function getUser(userId, token) {
+async function getUser(userId, token) {
     const res = await fetch(
         `/api/users/${userId}`,
         {
@@ -45,7 +49,9 @@ export async function getUser(userId, token) {
             }
         }
     );
-    const data = await res.json();
-    return data.user;
+    return await res.json();
+    // const data = await res.json();
+    // return data.user;
 }
+exports.getUser = getUser;
 

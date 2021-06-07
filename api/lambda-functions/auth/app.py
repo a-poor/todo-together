@@ -32,6 +32,7 @@ def lambda_handler(event, context):
         "statusCode": 200,
         "body": json.dumps({
             "success": True,
-            "token": token
+            "token": token,
+            "user_id": user.user_id,
         }),
     }

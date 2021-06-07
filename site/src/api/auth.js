@@ -1,6 +1,6 @@
 
-export async function authUser(username, password) {
-    const data = {
+async function authUser(username, password) {
+    const user = {
         username,
         password,
     };
@@ -12,10 +12,18 @@ export async function authUser(username, password) {
                 "Accept": "application/json",
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(user)
         }
     )
-    const data = await r.json();
-    return `Bearer ${data.token}`;
+    return await res.json();
+    // const data = await res.json();
+    // return `Bearer ${data.token}`;
 }
+exports.authUser = authUser;
+
+
+function fmtToken(token) {
+    return `Bearer ${token}`;
+}
+exports.fmtToken = fmtToken;
 

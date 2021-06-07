@@ -28,8 +28,9 @@ def lambda_handler(event, context):
         return {
             "statusCode": 400,
             "body": json.dumps({
-                "success": False,    
-                "message": "Unable to read `user_id` from path parameter.",
+                "success": False,
+                "user": None,
+                "message": "Couldn't find user with that `user_id`.",
             })
         }
 

@@ -78,17 +78,19 @@ function MenuBar({ tabKey, setTabKey }) {
           </Menu>
         </Col>
         <Col span={8}>
-          <Typography.Title 
-            level={ 2 } 
-            style={{ 
-              textAlign: "center",
-              color: "white",
-              paddingTop: "10px",
-              paddingBottom: "5px",
-            }}
-            >
-            { windowSize.width < 750 ? "TDTG" : "ToDoTogether" }
-          </Typography.Title>
+          <Link to="/">
+            <Typography.Title 
+              level={ 2 } 
+              style={{ 
+                textAlign: "center",
+                color: "white",
+                paddingTop: "10px",
+                paddingBottom: "5px",
+              }}
+              >
+              { windowSize.width < 750 ? "TDTG" : "ToDoTogether" }
+            </Typography.Title>
+          </Link>
         </Col>
       </Row>
     </Header>
