@@ -1,3 +1,6 @@
+const { API_BASE } = require('./config');
+
+console.log("API_BASE = "+API_BASE)
 
 async function authUser(username, password) {
     const user = {
@@ -5,12 +8,14 @@ async function authUser(username, password) {
         password,
     };
     const res = await fetch(
-        "/api/auth",
+        API_BASE+"/api/auth",
         {
+            mode: "cors",
             method: "POST",
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json",
+                'Access-Control-Allow-Origin':'*',
             },
             body: JSON.stringify(user)
         }

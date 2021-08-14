@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  proxy:
+    network_mode: host
+    build:
+      context: .
+    ports:
+      - 4040:4040

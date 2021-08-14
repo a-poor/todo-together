@@ -1,8 +1,10 @@
+const { API_BASE } = require('./config');
 
 async function getLists(token) {
     const res = await fetch(
-        "/api/lists",
+        API_BASE+"/api/lists",
         {
+            crossDomain:true,
             method: "GET",
             headers: {
                 "Accept": "application/json",
@@ -19,8 +21,9 @@ exports.getLists = getLists;
 
 async function newList(name, items = [], token = undefined) {
     const res = await fetch(
-        "/api/lists/new",
+        API_BASE+"/api/lists/new",
         {
+            crossDomain:true,
             method: "POST",
             headers: {
                 "Accept": "application/json",
@@ -41,8 +44,9 @@ exports.newList = newList;
 
 async function getList(listId, token) {
     const res = await fetch(
-        `/api/lists/${listId}`,
+        API_BASE+`/api/lists/${listId}`,
         {
+            crossDomain:true,
             method: "GET",
             headers: {
                 "Accept": "application/json",
@@ -58,8 +62,9 @@ exports.getList = getList;
 
 async function updateList(listId, data, token) {
     const res = await fetch(
-        `/api/lists/${listId}`,
+        API_BASE+`/api/lists/${listId}`,
         {
+            crossDomain:true,
             method: "POST",
             headers: {
                 "Accept": "application/json",
@@ -76,8 +81,9 @@ exports.updateList = updateList;
 
 async function deleteList(listId, token) {
     const res = await fetch(
-        `/api/lists/${listId}`,
+        API_BASE+`/api/lists/${listId}`,
         {
+            crossDomain:true,
             method: "DELETE",
             headers: {
                 "Accept": "application/json",

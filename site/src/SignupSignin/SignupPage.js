@@ -3,6 +3,8 @@ import { useHistory, Link } from 'react-router-dom';
 import { message, Typography, Space, Form, Input, Button } from 'antd';
 import { CheckCircleTwoTone, ExclamationCircleTwoTone } from '@ant-design/icons';
 
+import * as api from '../api/index';
+
 const { Text, Title } = Typography;
 
 
@@ -101,21 +103,7 @@ function SignupPage({  }) {
             onFinish={data => {
                 if (data.password !== data["password-confirm"]) return;
                 const { username, password, name } = data;
-                fetch(
-                    "/api/users/new",
-                    {
-                        method: "POST",
-                        headers: {
-
-                        },
-                        body: JSON.stringify({
-                            name,
-                            username,
-                            password,
-                        })
-                    }
-                )
-                .then(r => r.json())
+                api.users.newUser(name, username, password)
                 .then(r => {
                     if (!r.success)
                         throw new Error("Error: "+r.message);

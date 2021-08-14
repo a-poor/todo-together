@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import { Layout, Menu, Typography, Form, Input, Button, Divider } from 'antd';
 
+import * as api from '../api/index';
+
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 const { Text, Title } = Typography;
@@ -44,23 +46,26 @@ function SigninPage({ setUserData }) {
             }}
             onFinish={({username, password}) => {
                 console.log("Finished!", JSON.stringify(username));
-                fetch(
-                    "/api/users/new",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            username,
-                            password
-                        })
-                    }
-                )
-                .then(r => r.json())
+                // fetch(
+                //     "/api/users/new",
+                //     {
+                //         method: "POST",
+                //         headers: {
+                //             "Accept": "application/json",
+                //             "Content-Type": "application/json"
+                //         },
+                //         body: JSON.stringify({
+                //             username,
+                //             password
+                //         })
+                //     }
+                // )
+                // .then(r => r.json())
+                api.auth.authUser(username, password)
                 .then(r => {
                     if (r.success) {
+                        console.log("SUCCESS!");
+                        console.log(r);
                         setUserData(r.user);
                         history.push("/");
                     } else {

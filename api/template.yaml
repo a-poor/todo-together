@@ -22,6 +22,13 @@ Resources:
     Properties:
       Name: TodoTogetherAPI
       StageName: prod
+      Cors:
+        AllowMethods: "'POST, GET, DELETE, OPTIONS'"
+        AllowHeaders: "'X-Forwarded-For'"
+        AllowOrigin: "*"
+        MaxAge: "'600'"
+        AllowCredentials: true
+
 
   UserTable:
     Type: AWS::Serverless::SimpleTable

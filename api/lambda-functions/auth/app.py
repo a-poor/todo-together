@@ -13,6 +13,11 @@ def lambda_handler(event, context):
         print("Error reading body JSON", e)
         return {
             "statusCode": 400,
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,DELETE',
+            },
             "body": json.dumps({
                 "success": False,
                 "message": "Can't read user/password JSON from body."
@@ -22,6 +27,11 @@ def lambda_handler(event, context):
     if user is None:
         return {
             "statusCode": 401,
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,DELETE',
+            },
             "body": json.dumps({
                 "success": False,
                 "message": "Can't read user/password JSON from body."
@@ -30,6 +40,11 @@ def lambda_handler(event, context):
     token = todo.get_user_jwt(user)
     return {
         "statusCode": 200,
+        'headers': {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,DELETE',
+                },
         "body": json.dumps({
             "success": True,
             "token": token,

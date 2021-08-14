@@ -1,7 +1,8 @@
+const { API_BASE } = require('./config');
 
 async function listUsers(token) {
     const res = await fetch(
-        "/api/users",
+        API_BASE+"/api/users",
         {
             method: "GET",
             headers: {
@@ -17,8 +18,9 @@ exports.listUsers = listUsers;
 
 async function newUser(name, username, password) {
     const res = fetch(
-        "/api/users/new",
+        API_BASE+"/api/users/new",
         {
+            crossDomain:true,
             method: "POST",
             headers: {
                 "Accept": "application/json",
@@ -39,8 +41,9 @@ exports.newUser = newUser;
 
 async function getUser(userId, token) {
     const res = await fetch(
-        `/api/users/${userId}`,
+        API_BASE+`/api/users/${userId}`,
         {
+            crossDomain:true,
             method: "GET",
             headers: {
                 "Accept": "application/json",
